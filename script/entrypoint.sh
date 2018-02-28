@@ -1,9 +1,11 @@
 #!/bin/sh
+
+set -e
+
 echo "start nginx"
 
 #set TZ
-cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
-echo ${TZ} > /etc/timezone && \
+test $TZ && cp /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone || true
 
 #setup ssl keys
 echo "ssl_key=${SSL_KEY:=le-key.pem}, ssl_cert=${SSL_CERT:=le-crt.pem}, ssl_chain_cert=${SSL_CHAIN_CERT:=le-chain-crt.pem}"
@@ -37,17 +39,16 @@ mv -v /etc/nginx/conf.d /etc/nginx/conf.d.disabled
 
 (
  sleep 5 #give nginx time to start
+ mv -v /etc/nginx/conf.d.disabled /etc/nginx/conf.d #enable
  echo "start letsencrypt updater"
  while :
  do
-	echo "trying to update letsencrypt ..."
+    echo "trying to update letsencrypt ..."
     /le.sh
-    rm -f /etc/nginx/conf.d/default.conf 2>/dev/null #remove default config, conflicting on 80
-    mv -v /etc/nginx/conf.d.disabled /etc/nginx/conf.d #enable
     echo "reload nginx with ssl"
     nginx -s reload
     sleep 60d
  done
 ) &
 
-nginx -g "daemon off;"
+exec nginx -g "daemon off;"
