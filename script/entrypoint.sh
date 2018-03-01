@@ -17,7 +17,7 @@ mkdir -p /etc/nginx/conf.d
 mkdir -p /etc/nginx/ssl
 
 #copy /etc/nginx/service*.conf if any of servcie*.conf mounted
-if [ -f /etc/nginx/service*.conf ]; then
+if (ls /etc/nginx/service*.conf 1>/dev/null 2>/dev/null); then
     cp -fv /etc/nginx/service*.conf /etc/nginx/conf.d/
 fi
 
