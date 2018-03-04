@@ -2,6 +2,8 @@
 
 Simple nginx image (alpine based) with integrated [Let's Encrypt](https://letsencrypt.org) support.
 
+Clone of https://github.com/umputun/nginx-le
+
 ## How to use
 
 - get [docker-compose.yml](https://github.com/umputun/nginx-le/blob/master/docker-compose.yml) and change things:
