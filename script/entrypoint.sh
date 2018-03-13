@@ -40,17 +40,19 @@ mv -v /etc/nginx/conf.d /etc/nginx/conf.d.disabled
 (
     sleep 5 #give nginx time to start
 
-    mv -v /etc/nginx/conf.d.disabled /etc/nginx/conf.d #enable
     echo "start letsencrypt updater"
+
+    mv -v /etc/nginx/conf.d.disabled /etc/nginx/conf.d  # enable
 
     if (find /etc/nginx/ssl -name `basename "${SSL_CERT}"` -mtime -7 -exec false {} +); then
         echo "trying to update letsencrypt ..."
         /le.sh
-        echo "reload nginx with ssl"
-        nginx -s reload
     else
         echo "certs already updated"
     fi
+
+    echo "reload nginx with ssl"
+    nginx -s reload
 
     while :
     do
