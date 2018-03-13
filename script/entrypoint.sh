@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+set -e -x
 
 echo "start nginx"
 
@@ -43,7 +43,7 @@ mv -v /etc/nginx/conf.d /etc/nginx/conf.d.disabled
     mv -v /etc/nginx/conf.d.disabled /etc/nginx/conf.d #enable
     echo "start letsencrypt updater"
 
-    if (find . -name "${SSL_CERT}" -mtime -7 -exec false {} +); then
+    if (find /etc/nginx/ssl -name `basename "${SSL_CERT}"` -mtime -7 -exec false {} +); then
         echo "trying to update letsencrypt ..."
         /le.sh
         echo "reload nginx with ssl"
