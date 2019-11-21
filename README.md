@@ -1,4 +1,4 @@
-# NGINX-LE - Nginx web and proxy with automatic let's encrypt
+# NGINX-LE - Nginx web and proxy with automatic let's encrypt [![Docker Automated build](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/umputun/nginx-le/) 
 
 Simple nginx image (alpine based) with integrated [Let's Encrypt](https://letsencrypt.org) support.
 
@@ -26,8 +26,13 @@ Clone of https://github.com/umputun/nginx-le
 
 ## Some implementation details
 
+**Important:** provided [nginx.conf](https://github.com/umputun/nginx-le/blob/master/conf/nginx.conf) handles 
+http->https redirect automatically, no need to add it into your custom `servcie.conf`. In case if you need a custom server on
+http (:80) port, make sure you [handle](https://github.com/umputun/nginx-le/blob/master/conf/nginx.conf#L62) `/.well-known/` 
+path needed for LE challenge.  
+
 - image uses alpine's `certbot` package.
-- `script/entrypoint.sh` requests LE certificate and will refresh every 60 days.
+- `script/entrypoint.sh` requests LE certificate and will refresh every 10 days in case if certificate is close to expiration (30day)
 - `script/le.sh` gets SSL
 - nginx-le on [docker-hub](https://hub.docker.com/r/umputun/nginx-le/)
 - **A+** overall rating on [ssllabs](https://www.ssllabs.com/ssltest/index.html)
@@ -40,3 +45,7 @@ Clone of https://github.com/umputun/nginx-le
 - [Caddy](https://caddyserver.com) supports Let's Encrypt directly.
 - [leproxy](https://github.com/artyom/leproxy) small and nice (stand alone) https reverse proxy with automatic Letsencrypt
 - [bunch of others](https://github.com/search?utf8=✓&q=nginx+lets+encrypt)
+
+## Examples
+
+- [Reverse proxy](https://github.com/umputun/nginx-le/tree/master/example/webrtc) for WebRTC solutions, where you need multiple ports on one domain to reach different services behind your `nginx-le` container.
